@@ -1,22 +1,28 @@
+import pytest
+
 from gpt_oss.evals.abcd_grader import extract_abcd
 
 
-def test_valid_answer_declarations_are_still_extracted():
-    cases = {
-        "Answer: C": "C",
-        "**Answer:** B": "B",
-        "The answer is (D).": "D",
-        r"\boxed{A}": "A",
-        "D) The fourth option.": "D",
-        "**D**": "D",
-    }
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Answer: C", "C"),
+        ("ANSWER: C", "C"),
+        ("**Answer:** B", "B"),
+        ("The answer is (D).", "D"),
+        (r"\boxed{A}", "A"),
+        ("D) The fourth option.", "D"),
+        ("**D**", "D"),
+        ("Answer: C\nAdditional reasoning follows.", "C"),
+    ],
+)
+def test_valid_answer_declarations_are_still_extracted(text, expected):
+    assert extract_abcd(text) == expected
 
-    for text, expected in cases.items():
-        assert extract_abcd(text) == expected
 
-
-def test_prose_starting_with_answer_letters_is_not_an_answer():
-    cases = [
+@pytest.mark.parametrize(
+    "text",
+    [
         "As an AI I cannot help with that.",
         "Because the data is insufficient, I cannot decide.",
         "Clearly the answer is B.",
@@ -24,10 +30,14 @@ def test_prose_starting_with_answer_letters_is_not_an_answer():
         "I cannot answer a question about this.",
         "Answer: 42",
         "Answer: Both are correct",
-    ]
-
-    for text in cases:
-        assert extract_abcd(text) is None
+        "Answer: After checking, C",
+        "Answer: c",
+        "Answer: Caution",
+        "After checking, C",
+    ],
+)
+def test_prose_and_incomplete_declarations_are_not_answers(text):
+    assert extract_abcd(text) is None
 
 
 def test_explicit_answer_later_in_prose_is_preserved():
