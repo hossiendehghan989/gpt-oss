@@ -26,14 +26,14 @@ _PATTERNS = [
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper before letter
         ([ABCD])                 # capture the letter
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper after letter
-        \s*                     # optional trailing whitespace, end of line
+        \s*$                   # optional trailing whitespace, end of line
     ''', re.MULTILINE),
 
     # 1) Answer: (C)   or   Answers: (B)
     re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*\(\s*([ABCD])\s*\)'),
 
-    # 2) Answer: C    or   Answers – D
-    re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*([ABCD])\b'),
+# 2) Answer: C    or   Answers – D
+    re.compile(r'(?i)\bAnswer[s]?\b\s*[:\-–]?\s*((?-i:[ABCD]))\b'),
 
     # 3) Option B   or   Choice: C
     re.compile(r'(?ix)\b(?:Option|Choice)\b\s*[:\-–]?\s*([ABCD])\b'),
@@ -72,8 +72,7 @@ _PATTERNS = [
         (?:\*{1,2}|_{1,2})?     # optional markdown wrapper
         ([ABCD])                # capture group for letter
         (?:\*{1,2}|_{1,2})?     # optional closing markdown
-        \s*[\.\)\-–:]?          # optional separator after the letter
-        \s*.*$                  # allow any following text
+        \s*(?:[\.\)\-–:]\s*.*)?$  # optional separator and explanation
     ''', re.MULTILINE),
 ]
 
@@ -98,7 +97,7 @@ def extract_abcd(text: str) -> str | None:
     ))
     for _, match, letter in matches:
         return letter
-    return text.removeprefix('**')[:1]
+    return None
 
 
 def main():
@@ -118,4 +117,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
