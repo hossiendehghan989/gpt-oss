@@ -64,6 +64,24 @@ def test_function_call_ids_are_required(test_client, item):
     assert response.status_code == 422
 
 
+@pytest.mark.parametrize(
+    "item",
+    [
+        {"type": "function_call", "name": "get_weather", "arguments": "{}", "call_id": ""},
+        {"type": "function_call", "name": "get_weather", "arguments": "{}", "call_id": "   "},
+        {"type": "function_call_output", "call_id": "", "output": "21C sunny"},
+        {"type": "function_call_output", "call_id": "   ", "output": "21C sunny"},
+    ],
+)
+def test_blank_function_call_ids_are_rejected(test_client, item):
+    response = test_client.post(
+        "/v1/responses",
+        json={"model": "gpt-oss-120b", "input": [item]},
+    )
+
+    assert response.status_code == 422
+
+
 def test_function_call_and_output_with_matching_id_are_accepted(test_client):
     response = test_client.post(
         "/v1/responses",

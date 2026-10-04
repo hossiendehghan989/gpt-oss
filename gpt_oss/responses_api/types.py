@@ -1,7 +1,7 @@
 from typing import Any, Dict, Literal, Optional, Union
 
 from openai_harmony import ReasoningEffort
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
 
 MODEL_IDENTIFIER = "gpt-oss-120b"
 DEFAULT_TEMPERATURE = 0.0
@@ -58,11 +58,25 @@ class FunctionCallItem(BaseModel):
     id: str = "fc_1234"
     call_id: str
 
+    @field_validator("call_id")
+    @classmethod
+    def call_id_must_be_nonblank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("call_id must not be blank")
+        return value
+
 
 class FunctionCallOutputItem(BaseModel):
     type: Literal["function_call_output"]
     call_id: str
     output: str
+
+    @field_validator("call_id")
+    @classmethod
+    def call_id_must_be_nonblank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("call_id must not be blank")
+        return value
 
 
 class WebSearchActionSearch(BaseModel):
