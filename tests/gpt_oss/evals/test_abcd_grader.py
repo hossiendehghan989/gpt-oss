@@ -34,3 +34,29 @@ def test_rejects_prose_and_non_answers(text: str) -> None:
 )
 def test_preserves_explicit_answer_declarations(text: str, expected: str) -> None:
     assert extract_abcd(text) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("answer: B", "B"),
+        ("ANSWER: (C)", "C"),
+        ("answers - D", "D"),
+        ("option A", "A"),
+        ("Choice: B", "B"),
+        ("Answer: correct option is (B)", "B"),
+        ("Explanation\nB", "B"),
+    ],
+)
+def test_labels_are_case_insensitive_but_choices_remain_uppercase(
+    text: str, expected: str
+) -> None:
+    assert extract_abcd(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["Answer: c", "answer: (d)", "Option b", "choice: a"],
+)
+def test_lowercase_choices_are_rejected(text: str) -> None:
+    assert extract_abcd(text) is None

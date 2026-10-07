@@ -5,9 +5,9 @@ import sys
 _PATTERNS = [
     # 0)"**Answer:** A" or "*Answers* – B", i.e. markdown‐wrapped "Answer(s)" with an unwrapped letter.
     re.compile(
-        r'''(?ix)                   # case‐insensitive, ignore‐space
+        r'''(?x)                    # ignore-space; label matching is local
         (?:\*{1,2}|_{1,2})          # leading *…*  or _…_
-        Answer[s]?                  #   Answer or Answers
+        (?i:Answer[s]?)             #   Answer or Answers
         \s*[:\-–]?                  #   optional separator
         (?:\*{1,2}|_{1,2})          # closing wrapper
         \s*                         # optional space
@@ -17,10 +17,10 @@ _PATTERNS = [
     ),
 
     # 0.1)
-    re.compile(r'''(?ix)           # ignore case, allow verbose mode
+    re.compile(r'''(?x)            # allow verbose mode; label matching is local
         ^\s*                      # optional leading whitespace
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper
-        Answer:?                   # the word 'answer' with an optional colon
+        (?i:Answer):?              # the word 'answer' with an optional colon
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper again
         \s*:?\s*                  # optional colon with optional spaces
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper before letter
@@ -30,13 +30,13 @@ _PATTERNS = [
     ''', re.MULTILINE),
 
     # 1) Answer: (C)   or   Answers: (B)
-    re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*\(\s*([ABCD])\s*\)'),
+    re.compile(r'(?x)\b(?i:Answer[s]?)\b\s*[:\-–]?\s*\(\s*([ABCD])\s*\)'),
 
 # 2) Answer: C    or   Answers – D
-    re.compile(r'(?i)\bAnswer[s]?\b\s*[:\-–]?\s*((?-i:[ABCD]))\b'),
+    re.compile(r'(?x)\b(?i:Answer[s]?)\b\s*[:\-–]?\s*([ABCD])\b'),
 
     # 3) Option B   or   Choice: C
-    re.compile(r'(?ix)\b(?:Option|Choice)\b\s*[:\-–]?\s*([ABCD])\b'),
+    re.compile(r'(?x)\b(?i:(?:Option|Choice))\b\s*[:\-–]?\s*([ABCD])\b'),
 
     # 7) LaTeX \boxed{...A...}, catches both \boxed{A} and
     #    \boxed{\text{A } 2.08\times10^{-6}\,\mathrm{m}} etc.
