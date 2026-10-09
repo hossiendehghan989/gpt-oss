@@ -27,7 +27,7 @@ _PATTERNS = [
         ([ABCD])                 # capture the letter
         (?![A-Z0-9])            # do not accept a letter prefix in prose
         (?:\*{1,2}|_{1,2})?       # optional markdown wrapper after letter
-        \s*$                    # answer declaration must end the line
+        \s*[.!?]?\s*$           # allow terminal punctuation, but no trailing prose
     ''', re.MULTILINE),
 
     # 1) Answer: (C)   or   Answers: (B)
