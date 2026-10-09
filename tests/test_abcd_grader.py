@@ -10,6 +10,8 @@ def test_extracts_explicit_answer_declarations() -> None:
         "*Answer*: A.": "A",
         "**Answer**: B.": "B",
         "__Answer__: C!": "C",
+        "A!": "A",
+        "B?": "B",
         "C)": "C",
         "**D**": "D",
     }

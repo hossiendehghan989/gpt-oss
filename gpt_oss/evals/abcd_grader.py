@@ -74,7 +74,7 @@ _PATTERNS = [
         ([ABCD])                # capture group for letter
         (?![A-Z0-9])            # do not accept a letter prefix in prose
         (?:\*{1,2}|_{1,2})?     # optional closing markdown
-        \s*[\.\)\-–:]?          # optional separator after the letter
+        \s*[\.\)\-–:!?]?       # optional terminal punctuation after the letter
         \s*$                    # no unstructured prose after the answer
     ''', re.MULTILINE),
 ]
