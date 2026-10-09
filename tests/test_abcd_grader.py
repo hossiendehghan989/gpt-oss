@@ -24,6 +24,8 @@ def test_does_not_classify_letter_prefixes_as_answers() -> None:
         "Answer: 42",
         "Answer: Both options are correct.",
         "**Answer**: B. This is why.",
+        "Answer: B. This is why.",
+        "Answer: B because this explanation follows.",
         "Caution: the premise is false.",
         "Difficult to determine from the supplied data.",
         "A useful way to approach this is...",

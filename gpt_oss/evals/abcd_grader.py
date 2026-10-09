@@ -34,7 +34,7 @@ _PATTERNS = [
     re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*\(\s*([ABCD])\s*\)'),
 
     # 2) Answer: C    or   Answers – D
-    re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*([ABCD])\b'),
+    re.compile(r'(?ix)\bAnswer[s]?\b\s*[:\-–]?\s*([ABCD])\b\s*[.!?]?\s*$'),
 
     # 3) Option B   or   Choice: C
     re.compile(r'(?ix)\b(?:Option|Choice)\b\s*[:\-–]?\s*([ABCD])\b'),
